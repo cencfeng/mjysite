@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="loginHtml">
+<head>
+	<meta charset="utf-8">
+	<title>登录</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!--<meta name="apple-mobile-web-app-status-bar-style" content="black">-->
+	<!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+	<!--<meta name="format-detection" content="telephone=no">-->
+	<link rel="stylesheet" href="../layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="../css/public.css" media="all" />
+	<style>
+		.loginBody{ background:url(/images/loginbg.jpg);background-size:100% 100%;position:fixed;left:0;top:0;right:0;bottom:0;}
+	</style>
+</head>
+<body class="loginBody">
+<form class="layui-form" action="/system/index" method="post">
+	<div class="login_face"><img src="../images/face.jpg" class="userAvatar"></div>
+	<div class="layui-form-item input-item">
+		<input type="text" id="userName" name="username" placeholder="用户名" class="layui-input" lay-verify="required">
+	</div>
+	<div class="layui-form-item input-item">
+		<input type="password" id="password" name="password" placeholder="密码" class="layui-input" lay-verify="required">
+	</div>
+	<div class="layui-form-item input-item">
+		<input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住帐号?">
+	</div>
+	<br>
+	<div class="layui-form-item">
+		<input type="submit" class="layui-btn layui-block" value="登录" id="btnlogin"/>
+	</div>
+	<div class="layui-form-item layui-row">
+		<a href="javascript:;" class="seraph icon-qq layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4"></a>
+		<a href="javascript:;" class="seraph icon-wechat layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4"></a>
+		<a href="javascript:;" class="seraph icon-sina layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4"></a>
+	</div>
+</form>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+        $('#btnlogin').keydown(function (e) {
+            if (e.which == 13) {
+                $("#btnlogin").trigger("click");
+            }
+        });
+    });
+</script>
+</body>
+</html>

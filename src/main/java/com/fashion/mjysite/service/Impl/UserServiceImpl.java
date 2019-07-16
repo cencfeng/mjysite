@@ -20,4 +20,9 @@ public class UserServiceImpl implements UserService {
     public User selectUserMapByUserName(String username) {
         return userMapper.selectUserMapByUserName(username);
     }
+
+    @Override
+    public void updateFaceImg(String userName, String faceImg) {
+        userMapper.updateFaceImg(userName, faceImg);
+    }
 }

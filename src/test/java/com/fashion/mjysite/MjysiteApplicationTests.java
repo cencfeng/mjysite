@@ -2,8 +2,10 @@ package com.fashion.mjysite;
 
 import com.fashion.mjysite.entity.Menu;
 import com.fashion.mjysite.entity.User;
+import com.fashion.mjysite.service.FileService;
 import com.fashion.mjysite.service.MenuService;
 import com.fashion.mjysite.service.UserService;
+import com.sun.deploy.net.HttpResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
@@ -14,8 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -29,6 +35,8 @@ public class MjysiteApplicationTests {
 	private RedisTemplate redisTemplate;
 	@Autowired
 	private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+	private FileService fileService;
 	@Test
 	public void contextLoads() {
 	}
@@ -74,10 +82,34 @@ public class MjysiteApplicationTests {
 	    redisTemplate.opsForValue().set("objecttest",user);
     }
     @Test
-	public void getShiroSession(){
-		Session session = SecurityUtils.getSubject().getSession();
-		User user = (User)session.getAttribute("user");
-		System.out.println(user.getUsername());
+	public void javaSub(){
+		String str = "/faceimg/**";
+		String result = str.substring(str.length()-2, str.length());
+		System.out.println(result);
 	}
+//    @Test
+//	public void getShiroSession(){
+//		Session session = SecurityUtils.getSubject().getSession();
+//		User user = (User)session.getAttribute("user");
+//		System.out.println(user.getUsername());
+//	}
+	@Test
+	public void fdfsUploadTest() throws Exception {
+//		MultipartFile multiFile  = new MockMultipartFile("");
+//		File destFile = new File("....../destFile")
+////转存文件到指定的路径。
+//		multiFile.transferTo(destFile );
 
+
+		File file = new File("D:/jielaer.jpg");
+		MultipartFile mulFile = new MockMultipartFile(
+				"jielaer.jpg", //文件名
+				"jielaer.jpg", //originalName 相当于上传文件在客户机上的文件名
+				"application/octet-stream",
+				new FileInputStream(file) //文件流
+		);
+		String path = fileService.saveFile(mulFile);
+		System.out.println(path+"111");
+		//	ContentType.APPLICATION_OCTET_STREAM.toString(), //文件类型
+	}
 }

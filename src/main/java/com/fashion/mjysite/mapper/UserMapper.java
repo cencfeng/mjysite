@@ -2,6 +2,8 @@ package com.fashion.mjysite.mapper;
 
 import com.fashion.mjysite.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 
 import java.util.List;
 @Mapper
@@ -47,4 +49,6 @@ public interface UserMapper {
      * @mbg.generated Wed Aug 29 11:55:59 CST 2018
      */
     int updateByPrimaryKey(User record);
+
+    void updateFaceImg(@Param("userName") String userName, @Param("faceImg") String faceImg);
 }

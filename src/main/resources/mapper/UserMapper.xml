@@ -134,4 +134,7 @@ WHERE
   <update id="updateFaceImg" parameterType="String">
     UPDATE sys_user set image = #{faceImg} where username = #{userName}
   </update>
+  <update id="changePwd" parameterType="String">
+    update sys_user set password = #{password} where username = #{username} and active = 1
+  </update>
 </mapper>

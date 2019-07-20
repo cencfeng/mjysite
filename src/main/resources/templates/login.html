@@ -17,7 +17,7 @@
 	</style>
 </head>
 <body class="loginBody">
-<form class="layui-form" action="/system/logining" method="post">
+<form class="layui-form" action="" method="post" id="loginform">
 	<div class="login_face"><img src="../images/face.jpg" class="userAvatar"></div>
 	<div class="layui-form-item input-item">
 		<input type="text" id="userName" name="username" placeholder="用户名" class="layui-input" lay-verify="required">
@@ -30,7 +30,8 @@
 	</div>
 	<br>
 	<div class="layui-form-item">
-		<input type="submit" class="layui-btn layui-block" value="登录" id="btnlogin"/>
+		<input type="button" class="layui-btn layui-block"  lay-filter="login" value="登录" id="btnlogin"/>
+		<!--<button class="layui-btn login_btn layui-block" lay-submit="" lay-filter="login">登录</button>-->
 	</div>
 	<div class="layui-form-item layui-row">
 		<a href="javascript:;" class="seraph icon-qq layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4"></a>
@@ -43,10 +44,47 @@
         var layer = layui.layer,
             $ = layui.jquery,
             form = layui.form;
-        $('#btnlogin').keydown(function (e) {
+        // form.on('submit(login)', function(data) {
+        //     var loadIndex = layer.load(2, {
+        //         shade: [0.3, '#333']
+        //     });
+        //     $.post(data.form.action, data.field, function(res) {
+        //         layer.close(loadIndex);
+        //         if(res.success){
+        //             location.href=res.data.url;
+        //         }else{
+        //             layer.msg(res.message);
+        //         }
+        //     });
+        // });
+        $("#btnlogin").keydown(function (e) {
             if (e.which == 13) {
                 $("#btnlogin").trigger("click");
             }
+        });
+        $("#btnlogin").click(function (e) {
+            // var loadIndex = layer.load(2,{shade: [0.3, '#333']});
+            // $('#loginform').attr("action", "/system/indexs");
+            // $("#loginform").submit(function (res) {
+            //     layer.close(loadIndex);
+            //     if(res.success){
+            //         location.href=res.data.url;
+            //     }else {
+            //         layer.msg(res.message);
+            //     }
+            // });
+            var username = $("#userName").val().trim();
+            var password = $("#password").val().trim();
+            var loadIndex = layer.load(2,{shade: [0.3, '#333']});
+            $.post("/system/indexs", {username:username, password:password}, function (res) {
+                layer.close(loadIndex);
+                if(res.success){
+                    location.href=res.data.url;
+				}else {
+                    $("#password").focus();
+                    layer.msg(res.message);
+				}
+            });
         });
     });
 </script>

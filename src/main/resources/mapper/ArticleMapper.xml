@@ -61,4 +61,7 @@
     select id, articleid, article
     from sys_article
   </select>
+  <update id="updateArticle">
+    update sys_article set article = #{article} WHERE  id=#{sid}
+  </update>
 </mapper>

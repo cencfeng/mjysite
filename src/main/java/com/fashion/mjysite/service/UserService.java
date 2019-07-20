@@ -6,4 +6,5 @@ public interface UserService {
     User selectUserByUserName(String username);
     User selectUserMapByUserName(String username);
     void updateFaceImg(String userName, String faceImg);
+    void changePwd(String username, String password);
 }

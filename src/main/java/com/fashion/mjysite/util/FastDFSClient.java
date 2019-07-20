@@ -2,6 +2,7 @@ package com.fashion.mjysite.util;
 
 import com.fashion.mjysite.entity.FastDFSFile;
 import org.csource.fastdfs.*;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.csource.common.NameValuePair;
@@ -11,7 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FastDFSClient {
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(FastDFSClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(FastDFSClient.class);
+    //使用static模块初始化配置
     static {
         try {
             String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();;
@@ -21,7 +23,7 @@ public class FastDFSClient {
         }
     }
     public static String[] upload(FastDFSFile file) {
-        logger.info("File Name: " + file.getName() + "File Length:" + file.getContent().length);
+        //logger.info("File Name: " + file.getName() + "File Length:" + file.getContent().length);
         NameValuePair[] meta_list = new NameValuePair[1];
         meta_list[0] = new NameValuePair("author", file.getAuthor());
         String[] uploadResults = null;
@@ -34,7 +36,7 @@ public class FastDFSClient {
         } catch (Exception e) {
             logger.error("Non IO Exception when uploadind the file:" + file.getName(), e);
         }
-        logger.info("upload_file time used:" + (System.currentTimeMillis()) + " ms");
+        //logger.info("upload_file time used:" + (System.currentTimeMillis()) + " ms");
 
         if (uploadResults == null && storageClient!=null) {
             logger.error("upload file fail, error code:" + storageClient.getErrorCode());
@@ -42,7 +44,7 @@ public class FastDFSClient {
         String groupName = uploadResults[0];
         String remoteFileName = uploadResults[1];
 
-        logger.info("upload file successfully!!!" + "group_name:" + groupName + ", remoteFileName:" + " " + remoteFileName);
+        //logger.info("upload file successfully!!!" + "group_name:" + groupName + ", remoteFileName:" + " " + remoteFileName);
         return uploadResults;
     }
     public static FileInfo getFile(String groupName, String remoteFileName) {
@@ -75,7 +77,7 @@ public class FastDFSClient {
             throws Exception {
         StorageClient storageClient = getTrackerClient();
         int i = storageClient.delete_file(groupName, remoteFileName);
-        logger.info("delete file successfully!!!" + i);
+        //logger.info("delete file successfully!!!" + i);
     }
 
     public static StorageServer[] getStoreStorages(String groupName)
@@ -93,6 +95,7 @@ public class FastDFSClient {
     }
 
     public static String getTrackerUrl() throws IOException {
+        //单机构建,没配置tracker,这里先借用tracke的配置返回storage的端口
         return "http://"+getTrackerServer().getInetSocketAddress().getHostString()+":"+ClientGlobal.getG_tracker_http_port()+"/";
     }
     private static StorageClient getTrackerClient() throws IOException {

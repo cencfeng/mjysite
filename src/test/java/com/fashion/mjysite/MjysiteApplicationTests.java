@@ -50,7 +50,7 @@ public class MjysiteApplicationTests {
 	@Test
 	public void md5jiami(){
 		String hashAlgorithmName = "MD5";
-		Object mima = "123456";
+		Object mima = "666666";
 		int hashIterations = 2;
 		ByteSource salt = ByteSource.Util.bytes("chengfeng");
 		String result = new SimpleHash(hashAlgorithmName, mima, salt, hashIterations).toBase64();
@@ -101,7 +101,7 @@ public class MjysiteApplicationTests {
 //		multiFile.transferTo(destFile );
 
 
-		File file = new File("D:/jielaer.jpg");
+		File file = new File("D:/小婷.jpg");
 		MultipartFile mulFile = new MockMultipartFile(
 				"jielaer.jpg", //文件名
 				"jielaer.jpg", //originalName 相当于上传文件在客户机上的文件名
@@ -109,7 +109,7 @@ public class MjysiteApplicationTests {
 				new FileInputStream(file) //文件流
 		);
 		String path = fileService.saveFile(mulFile);
-		System.out.println(path+"111");
+		System.out.println(path);
 		//	ContentType.APPLICATION_OCTET_STREAM.toString(), //文件类型
 	}
 }

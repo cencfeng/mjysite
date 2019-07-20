@@ -13,10 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/system")
@@ -27,57 +30,59 @@ public class SystemController {
     public String login(){
         return "login";
     }
-    @RequestMapping("/logining")
-    public ModelAndView index(User user, HttpServletRequest request) {
+    @RequestMapping("/index")
+    public String index(){
+        return "system/index";
+    }
+    @RequestMapping("/indexs")
+    @ResponseBody
+    public RestResponse logining(String username, String password, HttpServletRequest request) {
 
         String rememberMe = request.getParameter("rememberMe");
         //, Boolean.valueOf(rememberMe)
         //token.setRememberMe(false);
-        //Map<String,Object> map = new HashMap<String, Object>();
-        ModelAndView mv = new ModelAndView("system/index");
+        Map<String,Object> map = new HashMap<String, Object>();
+        String error = null;
         HttpSession session = request.getSession();
         if(session == null){
             //return RestResponse.failure("session超时");
-            ModelAndView mv1 = new ModelAndView("user/login");
-            return mv1;
-        }else{
-            Subject subject = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword(),Boolean.valueOf(rememberMe));
-            try {
-                subject.login(token);
-                //map.put("url","index");
-            }catch (Exception e){
-                ModelAndView mv2 = new ModelAndView("error");
-                return mv2;
-            }
-//            }catch (IncorrectCredentialsException e) {
-//                return RestResponse.failure("登录密码错误.").setData("login");
-//            } catch (ExcessiveAttemptsException e) {
-//                return RestResponse.failure("登录失败次数过多");
-//            } catch (LockedAccountException e) {
-//                return RestResponse.failure("帐号已被锁定.");
-//            } catch (DisabledAccountException e) {
-//                return RestResponse.failure("帐号已被禁用.");
-//            } catch (ExpiredCredentialsException e) {
-//                return RestResponse.failure("帐号已过期.");
-//            } catch (UnknownAccountException e) {
-//                return RestResponse.failure("帐号不存在");
-//            } catch (UnauthorizedException e) {
-//                return RestResponse.failure("您没有得到相应的授权！");
-//            }catch (Exception e){
-//                return RestResponse.failure("failed"+e.toString()).setData("403");
-//            }
-            //return RestResponse.success("登录成功").setData("index");
+            return RestResponse.failure("session超时");
+        }
+        Subject subject = SecurityUtils.getSubject();
+//        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword(),Boolean.valueOf(rememberMe));
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password,Boolean.valueOf(rememberMe));
 
-            return mv;
+        try {
+            subject.login(token);
+            map.put("url","/system/index");
+        }catch (IncorrectCredentialsException e) {
+            error = "登录密码错误.";
+        } catch (ExcessiveAttemptsException e) {
+            error = "登录失败次数过多";
+        } catch (LockedAccountException e) {
+            error = "帐号已被锁定.";
+        } catch (DisabledAccountException e) {
+            error = "帐号已被禁用.";
+        } catch (ExpiredCredentialsException e) {
+            error = "帐号已过期.";
+        } catch (UnknownAccountException e) {
+            error = "帐号不存在";
+        } catch (UnauthorizedException e) {
+            error = "您没有得到相应的授权！";
+        }
+        if(StringUtils.isEmpty(error)){
+            return RestResponse.success("登录成功").setData(map);
+        }else{
+            return RestResponse.failure(error).setData("/system/login");
         }
 
+
+        }
 
        /* if(user != null){
             model.addAttribute("user",user);
             return  "menu2";
         }*/
-    }
     @RequestMapping("/getMenuByUsername")
     @ResponseBody
     public List<Menu> getUserMenuByUsername() throws Exception{

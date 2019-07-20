@@ -3,6 +3,7 @@ package com.fashion.mjysite.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fashion.mjysite.entity.Article;
 import com.fashion.mjysite.service.ArticleService;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -22,24 +23,33 @@ public class ArticleController {
     @RequestMapping("/getarticle")
     @ResponseBody
     public JSONObject getArticle(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit){
-        List<Article> articleList = articleService.getArticle();
+        PageInfo<Article> pageInfo = articleService.getArticle(page, limit);
         JSONObject result = new JSONObject();
+//        System.out.println(page + limit);
         result.put("code", 0);
         result.put("msg", "success");
-        result.put("count", 21);
-        result.put("data", articleList);
+        result.put("count", pageInfo.getTotal());
+        result.put("data", pageInfo.getList());
         return result;
     }
-    public List<Article> getArticle2(){
-        List<Article> articleList = articleService.getArticle();
-        return articleList;
-    }
+//    public List<Article> getArticle2(Integer page, Integer limit){
+//
+//        PageInfo<Article> pageInfo = articleService.getArticle(page, limit);
+//        return articleList;
+//    }
     @RequestMapping("/editarticle")
     @ResponseBody
-    public String ediArticle(@RequestParam(value = "article", required = false) String article){
+    public String ediArticle(@RequestParam(value = "article", required = false) String article, @RequestParam(value = "sid", required = true) Integer sid){
         //JSONObject result = new JSONObject();
-        System.out.println(article);
+        articleService.updateArticle(article, sid);
         //result.put("res", "ok");
-        return "OK";
+        return "success";
+    }
+    @RequestMapping("/delarticle")
+    @ResponseBody
+    public String delArticle(Long sid){
+        articleService.delArticle(sid);
+        //简单处理,后续加入try catch模块以便不中断系统
+        return "success";
     }
 }

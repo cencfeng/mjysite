@@ -111,21 +111,32 @@ public class FileController {
 //        }
 //        return "success";
 //    }
-    @RequestMapping("/singleUpload")
-    public String singleUploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes){
+    //fastDFS 文件服务器
+    @RequestMapping("/uploadfaceimg2")
+    @ResponseBody
+    public JSONObject singleUploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes){
+        JSONObject result = new JSONObject();
+        String path = null;
         if(file.isEmpty()){
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-            return "redirect:uploadStatus";
+            result.put("data", "fail");
+            result.put("url", "");
+            return result;
+            //return "redirect:uploadStatus";
         }
         try {
-            String path = fileService.saveFile(file);
-            redirectAttributes.addFlashAttribute("message",
-                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
-            redirectAttributes.addFlashAttribute("path",
-                    "file path url '" + path + "'");
+            path = fileService.saveFile(file);
+            User user = (User) SecurityUtils.getSubject().getPrincipal();
+            userService.updateFaceImg(user.getUsername(), path);
+            result.put("data", "success");
+            result.put("url",path);
+//            redirectAttributes.addFlashAttribute("message",
+//                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+//            redirectAttributes.addFlashAttribute("path",
+//                    "file path url '" + path + "'");
         }catch (Exception ex){
             System.out.println(ex);
         }
-        return "redirect:/system/index";
+        return result;
     }
 }

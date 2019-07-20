@@ -52,7 +52,7 @@ public class ShiroConfig {
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setLoginUrl("/system/login");
         shiroFilterFactoryBean.setSuccessUrl("/system/index");
-        filterChainDefinitionMap.put("/system/logining","anon");
+        filterChainDefinitionMap.put("/system/indexs","anon");
 //        filterChainDefinitionMap.put("/system/login","anon");
         filterChainDefinitionMap.put("/**", "authc");
         //未授权界面;
@@ -87,6 +87,7 @@ public class ShiroConfig {
     public SecurityManager securityManager(){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         securityManager.setRememberMeManager(rememberMeManager());
+        //重复调用次数太多,暂时关掉
 //        securityManager.setSessionManager(webSessionManager());
         securityManager.setCacheManager(redisCacheManager());
         securityManager.setRealm(myShiroRealm());
@@ -156,6 +157,7 @@ public class ShiroConfig {
 //        sessionDAO.setRedisManager(redisManager());
 //        return sessionDAO;
 //    }
+
 //    @Bean
 //    public SessionManager webSessionManager(){
 //        DefaultWebSessionManager manager = new DefaultWebSessionManager();

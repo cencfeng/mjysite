@@ -52,7 +52,7 @@ public class MyShiroRealm extends AuthorizingRealm{
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
                 user, //用户名,和getSubject().getPrincipal(),前段shiro.rpincipal结果相关
                 user.getPassword(), //密码
-                ByteSource.Util.bytes(user.getSalt()),//如果salt=username+salt,加密时salt要设置成username+salt,这里没有使用到
+                ByteSource.Util.bytes(user.getSalt()),//如果salt=username+salt,加密时salt要设置成username+salt,这里没有使用到,在数据库中已保存,之后修改到property文件中统一设置.
                 getName()  //realm name
         );
         //明文验证

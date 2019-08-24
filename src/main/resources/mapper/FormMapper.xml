@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fashion.mjysite.mapper.FormMapper">
+  <resultMap id="formmap" type="com.fashion.mjysite.entity.Form">
+    <result column="formcode" property="formcode"/>
+    <result column="formtype" property="formtype"/>
+    <result column="dept" property="dept"/>
+    <result column="supplier" property="supplier"/>
+    <result column="delivery" property="delivery"/>
+    <result column="account" property="account"/>
+    <result column="originator" property="originator"/>
+    <result column="creatdate" property="creatdate"/>
+    <result column="flag" property="flag"/>
+    <result column="signflag" property="signflag"/>
+    <result column="totalprice" property="totalprice"/>
+    <result column="applydate" property="applydate"/>
+    <collection property="formDetailList" javaType="ArrayList" ofType="com.fashion.mjysite.entity.FormDetail">
+      <result property="partno" column="partno"/>
+      <result property="description" column="description"/>
+      <result property="quantity" column="quantity"/>
+      <result property="unitprice" column="unitprice"/>
+      <result property="total" column="total"/>
+    </collection>
+  </resultMap>
+  <select id="seletSignOrder" resultType="SignOrder">
+    SELECT * from sys_sign_order where formtype = #{formType} and dept = #{dept} and flag = '1'
+    <if test="totalprice lt 5000">
+      and requireflag = '1'
+    </if>
+  </select>
+  <select id="createFormCode" parameterType="String" resultType="FormNo">
+    select * from sys_formno_dept WHERE dept = #{dept} and formtype = #{formType}
+  </select>
+  <update id="updateFormNo" parameterType="String">
+     UPDATE sys_formno_dept set formno = formno + 1 where dept = #{dept} and formtype = #{formType}
+  </update>
+  <insert id="insertForm" parameterType="Form">
+    insert into cost_form(formcode,formtype,dept,supplier,delivery,account,originator,applydate,signflag,totalprice)
+    values(#{formcode},#{formtype},#{dept},#{supplier},#{delivery},#{account},#{originator},#{applydate},'0',#{totalprice})
+  </insert>
+  <insert id="insertFormDetail" parameterType="FormDetail">
+    insert into cost_form_detail(formcode,partno,description,quantity,unitprice,total)
+    values
+    <foreach collection="list" item="formdetail" index="index" separator=",">
+      (#{formdetail.formcode},#{formdetail.partno},#{formdetail.description},#{formdetail.quantity},#{formdetail.unitprice},#{formdetail.total})
+    </foreach>
+  </insert>
+  <insert id="insertAtta" parameterType="Atta">
+    INSERT INTO sys_atta(formcode,attaname, attaurl,attano) values
+    <foreach collection="list" item="atta" index="index" separator=",">
+      (#{atta.formcode}, #{atta.attaname}, #{atta.attaurl}, #{atta.attano})
+    </foreach>
+  </insert>
+  <insert id="insertSign" parameterType="Sign">
+    insert into sys_sign(formcode,formtype,account,username,actionname,signorder,actionflag,signremark)
+    values
+    <foreach collection="list" item="sign" index="index" separator=",">
+      (#{sign.formcode},#{sign.formtype},#{sign.account},#{sign.username},#{sign.actionname},#{sign.signorder},#{sign.actionflag},#{sign.signremark})
+    </foreach>
+  </insert>
+  <!--<select id="" parameterType="String" resultMap="formmap">-->
+    <!--select * from s_prform a, s_prform_detail b-->
+    <!--where a.formcode=b.formcode-->
+    <!--and a.formcode=#{formcode}-->
+  <!--</select>-->
+  <select id="getFormSum" parameterType="String" resultType="Map">
+    SELECT count(formtype) AS 'signsum',formtype FROM sys_sign where actionflag = 1 and flag = 1 and account = #{account} GROUP BY formtype
+  </select>
+  <select id="selectFromList" parameterType="String" resultType="Sign">
+    SELECT id,formtype,formcode,actionname FROM sys_sign where flag = 1 and account = #{account} and formtype = #{formtype} and actionflag = 1
+  </select>
+
+  <select id="getFormInfor" parameterType="String" resultMap="formmap">
+    select * from cost_form a, cost_form_detail b
+    where a.formcode=b.formcode
+    and a.formcode=#{formcode}
+  </select>
+  <select id="getSignHistory" parameterType="String" resultType="Sign">
+    select * from sys_sign where formcode=#{formcode} and flag = '1' order by signorder
+  </select>
+  <update id="agreeSign" parameterType="String">
+    <selectKey keyProperty="newid" resultType="int" order="BEFORE">
+      SELECT (select  id from sys_sign where formcode = #{formcode} and actionflag = '0' and flag= '1' ORDER BY signorder LIMIT 1)as 'newid' from dual
+    </selectKey>
+    UPDATE sys_sign set signtime = SYSDATE(), signremark = #{signremark}, actionflag = '2' where formcode = #{formcode} and actionflag = '1' and flag = '1';
+    <choose>
+      <when test="newid == null">
+        UPDATE cost_form SET signflag = '2' where formcode = #{formcode}
+      </when>
+      <otherwise>
+        UPDATE sys_sign set actionflag = '1' where id=${newid}
+      </otherwise>
+    </choose>
+  </update>
+  <update id="disagreeSign" parameterType="String">
+    <selectKey keyProperty="newid" resultType="int" order="BEFORE">
+    select (select id from sys_sign where formcode=#{formcode} and flag ='1' order by signorder LIMIT 1) as 'newid' from dual
+    </selectKey>
+    update sys_sign set actionflag = '1' where id = ${newid};
+    update sys_sign set actionflag = '0'where id != ${newid} and formcode = #{formcode}
+  </update>
+</mapper>

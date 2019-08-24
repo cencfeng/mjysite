@@ -52,4 +52,5 @@ public interface UserMapper {
 
     void updateFaceImg(@Param("userName") String userName, @Param("faceImg") String faceImg);
     Integer changePwd(@Param("username") String username, @Param("password") String password);
+    String getTip();
 }

@@ -137,4 +137,7 @@ WHERE
   <update id="changePwd" parameterType="String">
     update sys_user set password = #{password} where username = #{username} and active = 1
   </update>
+  <select id="getTip" resultType="String">
+    select context from sys_tip where flag = 1;
+  </select>
 </mapper>

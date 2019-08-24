@@ -2,6 +2,7 @@ package com.fashion.mjysite.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fashion.mjysite.entity.Atta;
 import com.fashion.mjysite.entity.User;
 import com.fashion.mjysite.service.FileService;
 import com.fashion.mjysite.service.UserService;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/file")
@@ -42,6 +44,7 @@ public class FileController {
     private String virPath;
     @RequestMapping("/uploadfaceimg")
     @ResponseBody
+    //上传到虚拟路径目录
     public JSONObject uploadFaceImg(@RequestParam("file")MultipartFile file) throws IOException {
         // TODO Auto-generated method stub
         Date date = new Date();
@@ -138,5 +141,36 @@ public class FileController {
             System.out.println(ex);
         }
         return result;
+    }
+    @RequestMapping("/fileupload")
+    @ResponseBody
+    public JSONObject fileUploadSingle(@RequestParam("file") MultipartFile file){
+        Atta atta = new Atta();
+        JSONObject jb = new JSONObject();
+        String filename = file.getOriginalFilename();
+        String path = null;
+        try {
+            path = fileService.saveFile(file);
+        }catch (Exception e){
+            jb.put("data", "failed");
+        }
+        atta.setAttaname(filename);
+        atta.setAttaurl(path);
+        jb.put("data", "success");
+        jb.put("result", atta);
+        return jb;
+    }
+    @RequestMapping("/getFileByformCode")
+    @ResponseBody
+    public JSONObject getFileByformCode(HttpServletRequest req){
+        JSONObject jb = new JSONObject();
+        String formCode = req.getParameter("formcode");
+        List<Atta> attaList = fileService.getFileByformCode(formCode);
+        jb.put("code", 0);
+        jb.put("msg", "success");
+        jb.put("count", attaList.size());
+        jb.put("data", attaList);
+        //jb.put("result","success");
+        return jb;
     }
 }

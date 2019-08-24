@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>首页</title>
@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <!--<meta http-equiv="Access-Control-Allow-Origin" content="*">-->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <!--<meta name="apple-mobile-web-app-status-bar-style" content="black">-->
     <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
     <!--<meta name="format-detection" content="telephone=no">-->
@@ -25,7 +27,7 @@
             <!-- 顶级菜单 -->
             <ul class="layui-nav mobileTopLevelMenus" mobile>
                 <li class="layui-nav-item" data-menu="contentManagement">
-                    <a href="javascript:;"><i class="seraph icon-caidan"></i><cite>菜单</cite></a>
+                    <!--<a href="javascript:;"><i class="seraph icon-caidan"></i><cite>菜单</cite></a>-->
                     <dl class="layui-nav-child">
                         <!--<dd class="layui-this" data-menu="contentManagement"><a href="javascript:;"><i class="layui-icon" data-icon="&#xe63c;">&#xe63c;</i><cite>内容管理</cite></a></dd>-->
                         <!--<dd data-menu="memberCenter"><a href="javascript:;"><i class="seraph icon-icon10" data-icon="icon-icon10"></i><cite>用户中心</cite></a></dd>-->
@@ -57,13 +59,16 @@
                     <a href="javascript:;"><i class="seraph icon-lock"></i><cite>锁屏</cite></a>
                 </li>
                 <li class="layui-nav-item" id="userInfo">
-                    <a href="javascript:;"><img src="/images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName"> <shiro:principal property="nickname"/></cite></a>
+                    <!--/images/face.jpg-->
+                    <div hidden="hidden"><p id="faceimg"><shiro:principal property="image"/></p></div>
+                    <p id="account" hidden="hidden"><shiro:principal property="username"/></p>
+                    <a href="javascript:;"><img src= "" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName"> <shiro:principal property="nickname"/></cite></a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;" data-url="/user/userInfor"><i class="layui-icon layui-icon-friends"></i><cite>个人资料</cite></a></dd>
                         <dd><a href="javascript:;" data-url="/system/changepassword"><i class="layui-icon layui-icon-password"></i><cite>修改密码</cite></a></dd>
                         <dd><a href="javascript:;" class="showNotice"><i class="layui-icon layui-icon-notice"></i><cite>系统公告</cite><span class="layui-badge-dot"></span></a></dd>
-                        <dd pc><a href="javascript:;" class="functionSetting"><i class="layui-icon">&#xe620;</i><cite>功能设定</cite><span class="layui-badge-dot"></span></a></dd>
-                        <dd pc><a href="javascript:;" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>
+                        <!--<dd pc><a href="javascript:;" class="functionSetting"><i class="layui-icon">&#xe620;</i><cite>功能设定</cite><span class="layui-badge-dot"></span></a></dd>-->
+                        <!--<dd pc><a href="javascript:;" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>-->
                         <dd><a href="/logout" class="signOut"><i class="layui-icon layui-icon-close"></i><cite>退出</cite></a></dd>
                     </dl>
                 </li>
@@ -73,7 +78,7 @@
     <!-- 左侧导航 -->
     <div class="layui-side layui-bg-black">
         <div class="user-photo">
-            <a class="img" title="我的头像" ><img src="/images/face.jpg" class="userAvatar"></a>
+            <a class="img" title="我的头像" ><img src="" class="userAvatar"></a>
             <p>你好！<span class="userName">
                 <shiro:principal property="nickname"/>
             </span></p>
@@ -108,11 +113,20 @@
             </ul>
             <div class="layui-tab-content clildFrame">
                 <div class="layui-tab-item layui-show">
-                    <iframe src="http://baidu.com"></iframe>
+                    <!--<div th:include="system/indexlist"></div>-->
+                    <!--<a class="layui-btn layui-btn-normal" data-type="formList">添加角色</a>-->
+                    <iframe src="/topage/indexlist"></iframe>
                 </div>
             </div>
         </div>
     </div>
+    <!--公告-->
+    <!--<div style="padding:15px 20px; text-align:justify; line-height: 22px; text-indent:2em;border-bottom:1px solid #e2e2e2;" hidden="hidden" id="tipcontext">-->
+        <!--<p class="layui-red"></p></pclass></p>-->
+        <!--<p><span class="layui-red"></span>-->
+        <!--</p>-->
+    <!--</div>-->
+
     <!-- 底部 -->
     <div class="layui-footer footer">
         <p><span>copyright @2018 cen</span>　　<a onclick="donation()" class="layui-btn layui-btn-danger layui-btn-sm">捐赠作者</a></p>
@@ -122,16 +136,37 @@
 <!-- 移动导航 -->
 <div class="site-tree-mobile"><i class="layui-icon">&#xe602;</i></div>
 <div class="site-mobile-shade"></div>
-
+<script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script type="text/javascript" src="../js/index.js"></script>
 <script type="text/javascript" src="../js/cache.js"></script>
 <script type="text/javascript" src="../js/leftNav.js"></script>
-<!--<script type="text/javascript" src="../js/jquery.min.js"></script>-->
-<script type="text/javascript">
-    layui.use(['jquery', 'layer'], function () {
-        $ = layui.$;
-    })
-</script>
+<script type="text/javascript"></script>
+        // var faceimg = $("#faceimg").html();
+        // var ss = $("#userInfo").children("a:eq(0)").text();
+        //获取li下的第一个标签的img 的src值
+        // var s = $("#userInfo").children("a:eq(0)").find("img").attr('src');
+        // $("#test").text(faceimg);
+        // $(".userAvatar").attr("src", faceimg);
+        // var account = $("#account").html();
+        // $.post("/form/getFormSum", {account:account}, function (res) {
+        //     var ss = JSON.stringify(res);
+        //     layer.alert(res.data);
+        //     var listhtml = '';
+        //     if(res.result=="success"){
+        //         $("#signcard").show();
+        //         // var ss = JSON.stringify(res);
+        //         // layer.alert(res.data);
+        //         $.each(res.data,function (i,n) {
+        //             listhtml='<div class="layui-colla-item"><a href="/form/formsignlist/' + n.formtype +'"><h2 class="layui-colla-title">'  + n.formtype + '<span class="layui-badge">' + n.signsum + '</span></h2></a></div>';
+        //         });
+        //         $("#signlist").append(listhtml);
+        //         // var listhtml=
+        //         //     '<h2 class="layui-colla-title">待签核信息<span class="layui-badge">' + res.data. + '</span></h2>' +
+        //         //     '<div class="layui-colla-content layui-show">内容区域</div>' +
+        //         //     '</div>';
+        //     }
+        // })
+
 </body>
 </html>

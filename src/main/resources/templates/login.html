@@ -25,13 +25,16 @@
 	<div class="layui-form-item input-item">
 		<input type="password" id="password" name="password" placeholder="密码" class="layui-input" lay-verify="required">
 	</div>
-	<div class="layui-form-item input-item">
+	<div class="layui-form-item input-item" style="display: none">
 		<input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住帐号?">
 	</div>
 	<br>
 	<div class="layui-form-item">
-		<input type="button" class="layui-btn layui-block"  lay-filter="login" value="登录" id="btnlogin"/>
-		<!--<button class="layui-btn login_btn layui-block" lay-submit="" lay-filter="login">登录</button>-->
+		<input type="button" class="layui-btn layui-block" lay-submit="" value="登录" id="btnlogin"/>
+		<!--<button class="layui-btn login_btn layui-block" lay-submit="" lay-filter="login" id="btnlogin">登录</button>-->
+	</div>
+	<div class="layui-form-item">
+		<input type="button" class="layui-btn layui-block" value="guest" id="mylogin"/>
 	</div>
 	<div class="layui-form-item layui-row">
 		<a href="javascript:;" class="seraph icon-qq layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4"></a>
@@ -42,8 +45,7 @@
 <script type="text/javascript">
     layui.use(['layer', 'form'], function() {
         var layer = layui.layer,
-            $ = layui.jquery,
-            form = layui.form;
+            $ = layui.jquery;
         // form.on('submit(login)', function(data) {
         //     var loadIndex = layer.load(2, {
         //         shade: [0.3, '#333']
@@ -57,36 +59,60 @@
         //         }
         //     });
         // });
-        $("#btnlogin").keydown(function (e) {
-            if (e.which == 13) {
-                $("#btnlogin").trigger("click");
-            }
-        });
-        $("#btnlogin").click(function (e) {
-            // var loadIndex = layer.load(2,{shade: [0.3, '#333']});
-            // $('#loginform').attr("action", "/system/indexs");
-            // $("#loginform").submit(function (res) {
-            //     layer.close(loadIndex);
-            //     if(res.success){
-            //         location.href=res.data.url;
-            //     }else {
-            //         layer.msg(res.message);
-            //     }
-            // });
+        $("#btnlogin").click(function () {
             var username = $("#userName").val().trim();
             var password = $("#password").val().trim();
+            if(username==""||password==""){
+                layer.msg("用户名或密码不能为空");
+                return;
+            }
             var loadIndex = layer.load(2,{shade: [0.3, '#333']});
             $.post("/system/indexs", {username:username, password:password}, function (res) {
                 layer.close(loadIndex);
                 if(res.success){
                     location.href=res.data.url;
-				}else {
+                }else {
                     $("#password").focus();
                     layer.msg(res.message);
-				}
+                }
             });
+        })
+
+        $("#mylogin").click(function () {
+            var loadIndex = layer.load(2,{shade: [0.3, '#333']});
+            $.post("/system/indexs", {username:'20026080', password:'123456'}, function (res) {
+                layer.close(loadIndex);
+                if(res.success){
+                    location.href=res.data.url;
+                }else {
+                    $("#password").focus();
+                    layer.msg(res.message);
+                }
+            });
+        })
+
+
+        // $("#btnlogin").keydown(function (e) {
+        //     if (e.keyCode == 13) {
+        //         $("#btnlogin").trigger("click");
+        //         // $("#btnlogin").click();
+        //     }
+        // });
+        // var enter = function (e) {
+			// if(e.keyCode === 13){
+			//     $("#btnlogin").click();
+			//     return false;
+			// }
+        // }
+        document.addEventListener('keydown',function(e){
+            if(e.keyCode === 13){
+                $("#btnlogin").click();
+                // 其他代码
+            }
         });
+
     });
+
 </script>
 </body>
 </html>

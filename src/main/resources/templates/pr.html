@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+
+    <![endif]-->
+    <title>PR单</title>
+    <style type="text/css">
+        input{
+            border:none #FFFFFF;
+            border-bottom:#777777 solid 1px;
+            background:transparent;
+        }
+    </style>
+</head>
+<body>
+</div>
+    <div class="layui-card">
+        <div class="layui-card-header">PR单申请</div>
+        <div class="layui-card-body">
+            <div style="font-size: 18px"; align="center">深圳成丰电子有限公司</div>
+            <div style="font-family: 华文行楷; font-size: 24px" align="center">Synchian Electianice Ea.. Ltd.  No.</div>
+            <div style="font-size: 16px; text-decoration-line: underline;" align="center">PURCHASE REQUISITION SHEET</div>
+                <form id="prform" action="" enctype="multipart/form-data" class="layui-form" >
+                    <div class="layui-form-item">
+                        <input type="hidden" name="formtype" value="PR">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Supliser:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="supliser" name="supplier">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Dept:</label>
+                            <div class="layui-input-inline">
+                                <select id="dept" name="dept">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Date:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="textdate" name="applydate" onclick="WdatePicker({dateFmt: 'yyyy-MM-dd', isShowToday: true})">
+                            </div>
+                        </div>
+                        <!--<div class="layui-inline">-->
+                            <!--<label class="layui-form-label">P/O.No.:</label>-->
+                            <!--<div class="layui-input-inline">-->
+                                <!--<input type="text" id="formcode" name="formcode" readonly="readonly">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="layui-inline">-->
+                            <!--<input type="button" id="createformcode" class="layui-btn layui-btn-xs" value="creat">-->
+                        <!--</div>-->
+                    </div>
+
+                    <div>
+                        <table class="layui-table" id="prtable">
+                            <thead>
+                            <tr>
+                                <th>Part No.</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label style="width: 15px">1</label> </td>
+                                <td><input type="text" name="description"> </td>
+                                <td><input type="text" name="quantity"> </td>
+                                <td><input type="text" name="unitprice"> </td>
+                                <td><input type="text" name="total"> </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div align="center">
+                            <span class="layui-btn layui-btn-xs" id="btnadd" title="新增">新增</span>
+                            <span class="layui-btn layui-btn-xs" id="btndel" title="删除">删除</span>
+                        </div>
+                        <div align="right" hidden="hidden">
+                            Total:<input type="text" id="totalprice" name="totalprice">
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header">附件</div>
+                        <div class="layui-card-body">
+                            <button type="button" class="layui-btn layui-btn-primary" id="fileuploadbtn">
+                                <i class="layui-icon"></i>上传附件
+                            </button>
+
+                            <table class="layui-table" id="tbatta" hidden="hidden">
+                                <thead>
+                                <tr>
+                                    <th>附件</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header">Delivery</div>
+                        <div class="layui-card-body">
+                            <textarea class="textarea" style="width: 100%" id="delivery" name="delivery" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div align="center">
+                        <input type="button" id="btnsubmit" class="layui-btn" onclick="checksubmit()" value="提交"/>
+                        <input type="reset" id="btnreset" name="btnreset" class="layui-btn"/>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<!--<script type="text/javascript" src="../layui/layui.all.js"></script>-->
+<script type="text/javascript" src="../js/jquery.form.min.js"></script>
+<script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js"></script>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<script type="text/javascript">
+    layui.use(['table', 'layer', 'upload'], function (res) {
+        var layer = layui.layer,
+            upload = layui.upload,
+            form = layui.form,
+            table = layui.table;
+        //获取部门并绑定下拉框
+        $.post('/dept/getDept',{},function (data) {
+            var optionstring = '';
+            $.each(data, function (i, n) {
+                optionstring += "<option value=\"" + n.dept + "\" >" + n.dept_remark + "</option>";
+            });
+            // $("#dept").html(optionstring);
+            $("#dept").html('<option value="0">-请选择-</option>' + optionstring);
+            form.render();//layui必须加上才有效
+        });
+        //细项新增和删除
+        $("#btnadd").click(function(){
+            var index = $("#prtable tr").length;
+            var tabledata = '<tr><td><label style="width:15px"</label>'+ index +'</td><td><input type="text" name="description"></td><td><input type="text" name="quantity"> </td> <td><input type="text" name="unitprice"> </td> <td><input type="text" name="total"> </td> </tr>';
+            $("#prtable tbody").append(tabledata);
+        });
+        $("#btndel").click(function () {
+            var index = $("#prtable tr").length;
+            index = index-2;
+            //alert(index);
+            if(index == 0){
+                return false;
+            }else {
+                $("#prtable tbody").find('tr').eq(index).remove();
+            }
+        });
+        // $('#file').bind('fileuploadsubmit', function (e, data) {
+        //     data.formData = { formcode: $("#formcode").val() };  //如果需要额外添加参数可以在这里添加
+        // });
+        // //创建单号
+        // $("#createformcode").click(function () {
+        //     var dept = $("#dept").val();
+        //     if(dept !="0"){
+        //         $.post("/costform/createformcode",{dept:dept},function (data,status) {
+        //             if(status == "success"){
+        //                 $("#formcode").val(data);
+        //             }else{
+        //                 layer.msg(status);
+        //                 return false;
+        //             }
+        //         });
+        //     }else {
+        //         alert("请选择部门");
+        //         return false;
+        //     }
+        // });
+        //上传附件
+        upload.render({
+            elem:'#fileuploadbtn',
+            url:'/file/fileupload',
+            accept:'file',
+            done:function (res) {
+                layer.closeAll('loading');
+                // var ss = JSON.stringify(res);
+                // alert(ss);
+                if(res.data=="success"){
+                    layer.msg("上传成功", {time: 1000}, function () {
+                       var trid = "index"+ i;
+                       var attahtml = "<tr id='"+trid+"'><td><input type='text' name='attaname' value='"+res.result.attaname+"'/><input type='text' name='attaUrl' hidden='hidden' value='"+res.result.attaurl+"'/> </td><td> <span class='layui-btn layui-btn-xs' onclick='delAttaTabletr("+trid+")'>删除</span></td></tr>"
+                        $("#tbatta tbody").append(attahtml);
+                        var i = $("#tbatta tr").length;
+                        if(i > 1){
+                            $("#tbatta").show();
+                        }
+                    })
+                }
+            }
+        });
+        //计算总额
+        // $("#totalprice").click(function () {
+        //     var price = 0
+        //     //var s = "^(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$";//非负浮点
+        //     $("input[name='total']").each(function (i,data) {
+        //         var p = $(this).val();
+        //         if(p != ''){
+        //             if(!isNaN(p) && p > 0){
+        //                 price = parseFloat(price) + parseFloat($(this).val());
+        //             }else {
+        //                 layer.msg('Part No'+(i+1)+'请输入大于0的数字');
+        //                 return false;
+        //             }
+        //         }
+        //     });
+        //     $("#totalprice").val(price.toFixed(2));//保留两位小数
+        // });
+        //layui定义function的方式,引入layui.all.js
+        window.delAttaTabletr = function (trid) {
+            if (confirm("确定删除")) {
+                $(trid).remove();
+                var i = $("#tbatta tr").length;
+                if(i <= 1){
+                    $("#tbatta").hide();
+                }
+            }
+        }
+        //提交表单
+        window.checksubmit= function () {
+            var price = 0;
+            var checkresult = false;
+            var msg = "";
+            //var datetest = "/^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/";
+            var dept = $("#dept").val();
+            if(dept=='0'){
+                layer.msg("请填写部门信息!");
+                $("#dept").focus();
+                return false;
+            }
+            var supliser = $("#supliser").val();
+            if(supliser == ""){
+                $("#suplliser").focus();
+                layer.msg("请完善supliser信息");
+                return false;
+            }
+            var textdate = $("#textdate").val();
+            if(textdate == ""){
+                layer.msg("请选择日期!", {time:1000}, function () {
+                    $("#textdate").focus();
+                });
+                return false;
+            }
+            $("#prtable :input[type='text']:not([name='description'])").each(function (i) {
+                var p = $(this).val();
+                if(!isNaN(p)&&p>0&&p!=''){
+                   checkresult = true;
+                }else {
+                    checkresult = false;
+                    msg="请输入大于0的数字";
+                    return false;
+                    //each函数中的return false不能中断运行,须定义全局变量,并且需加入return false相当于break,不然会继续执行而覆盖判断结果
+
+                }
+            });
+
+            $("input[name='total']").each(function (i,data) {
+                price = parseFloat(price) + parseFloat($(this).val());
+                $("#totalprice").val(price.toFixed(2));//保留两位小数
+            });
+            // if(datetest.test(textdate)){
+            //     alert("日期格式有误,请从日历上参照选择!");
+            //     return false;
+            // }
+            //已累加
+            // var totalprice = $("#totalprice").val();
+            // if(totalprice == ""||totalprice <= 0){
+            //     layer.msg("total is null");
+            //     return false;
+            // }
+
+            // var applyname = $("#originator").val();
+            // if(applyname == ""){
+            //     layer.msg("Originator is null", {time:1000},function () {
+            //         $("#originator").focus();
+            //     });
+            //     return false;
+            // }
+            if(checkresult){
+                $("#prform").attr("action", "/form/createform");
+                //使用jquery.form.min.js中的方法,引入layui中的jquery会冲突,去掉jquery模块再单独引用jquery.min.js
+                $("#prform").ajaxSubmit(function (res) {
+                    if(res.data == "success"){
+                        layer.alert("提交成功,PR单号为:" + res.formcode, function () {
+                            $("#prform")[0].reset();
+                            $("#attatable tbody").html("");
+                            location.href = '/topage/pr';
+                        });
+                    }else {
+                        layer.alert(res.formcode);
+                    }
+                })
+            }else {
+                layer.alert(msg);
+                return false;
+            }
+        }
+    });
+</script>
+</body>
+</html>

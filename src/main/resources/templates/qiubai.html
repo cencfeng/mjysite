@@ -10,11 +10,15 @@
 	<link rel="stylesheet" href="../css/public.css" media="all" />
 </head>
 <body>
+
 <form class="layui-form">
-	<table class="layui-hide" id="tarticle" lay-filter = "tarticle"></table>
+	<div class="layui-card-body" style="overflow: auto">
+
+		<table class="layui-hide" id="tarticle" lay-filter = "tarticle"></table>
+	</div>
 </form>
 
-<div id="atent" hidden="hidden">
+<div id="atent" style="display: none">
 	<form  class="layui-form">
 		内容:<textarea id="editarticle" name="article" class="layui-textarea" style="height: 200px"></textarea>
 	</form>
@@ -33,11 +37,10 @@
         table.render({
             elem: '#tarticle'
             , url: '/article/getarticle'
-            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            // , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , cols: [
                 [
-                {field: 'id', title: 'ID'}
-                , {field: 'articleid', title: 'ARTICLEID'}
+                {field: 'id', title: 'ID', width:40}
                 , {field: 'article', title: '内容'}
                 , {title: '操作', toolbar: '#barBtn'}
             ]
@@ -51,6 +54,7 @@
                 ,last: false //不显示尾页
 
             }
+            //, {field: 'articleid', title: 'ARTICLEID'}
         // ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
             // return {
             //     "code": res.status, //解析接口状态
@@ -69,7 +73,7 @@
 						type: 1,   //五种类型：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
 						title: 'edit',
 						scrollbar:false,
-                        area: ['552px', '300px'],
+                        area: ['400px', '300px'],
 						btn: ['确定', '取消'],
 						content: $("#atent"),//'/article/getarticle' //type 2
 						yes: function(){

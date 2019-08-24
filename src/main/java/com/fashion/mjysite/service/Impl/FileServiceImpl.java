@@ -1,17 +1,23 @@
 package com.fashion.mjysite.service.Impl;
 
+import com.fashion.mjysite.entity.Atta;
 import com.fashion.mjysite.entity.FastDFSFile;
+import com.fashion.mjysite.mapper.AttaMapper;
 import com.fashion.mjysite.service.FileService;
 import com.fashion.mjysite.util.FastDFSClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 public class FileServiceImpl implements FileService {
+    @Autowired
+    private AttaMapper attaMapper;
     @Override
     public String fileUpload(MultipartFile file) {
         return null;
@@ -56,5 +62,10 @@ public class FileServiceImpl implements FileService {
         }
         String path= FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
         return path;
+    }
+
+    @Override
+    public List<Atta> getFileByformCode(String formcode) {
+        return attaMapper.getFileByformCode(formcode) ;
     }
 }

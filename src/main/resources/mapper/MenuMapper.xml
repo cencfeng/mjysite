@@ -39,7 +39,7 @@
     GROUP BY m.id
   </select>
   <select id="getMenuByUsernameChildren" parameterType="String" resultMap="UserMenuMap">
-    SELECT m.* FROM sys_menu m where m.parentid = #{id}
+    SELECT m.* FROM sys_menu m where m.parentid = #{id} AND m.flag = '1'
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--

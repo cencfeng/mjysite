@@ -20,7 +20,7 @@
                             <div class="layui-input-inline">
                                 <input type="text" name="username" th:value="${user.username}" readonly="" class="layui-input">
                             </div>
-                            <div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>
+                            <!--<div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>-->
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">姓名:</label>
@@ -105,7 +105,7 @@
                 layer.closeAll('loading');
                 //如果上传失败
                 if (res.data == 'success') {
-                    layer.msg("上传成功", {time: 1000}, function () {
+                    layer.msg("上传成功,重新登陆生效哦", {time: 1000}, function () {
                         // $("input[name='icon']").val(res.data.url);
                         $('#userFace').attr('src', res.url);
                     })

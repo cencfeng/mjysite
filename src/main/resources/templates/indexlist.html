@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/css/index.css" media="all" />
+</head>
+<body>
+<div class="layui-card">
+<!--<div class="layui-card-header">卡片面板</div>-->
+<div class="layui-card-body">
+    <div id="signlist">
+        <!--<a class="layui-btn layui-btn-normal" data-type="formList">添加角色</a>-->
+    </div>
+</div>
+</div>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer','form','jquery'], function() {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+        $.post("/form/getFormSum", {}, function (res) {
+            var listhtml = '';
+            if (res.result == "success") {
+                // $(".layui-card").show();
+                // var ss = JSON.stringify(res);
+                // layer.alert(res.data);
+                $.each(res.data, function (i, n) {
+                    listhtml = '<a class="a-list"  onclick=\'signlist("'+n.formtype+'")\'><h2 class="layui-colla-title">' + n.formtype + '<span class="layui-badge">' + n.signsum + '</span></h2></a>';
+                    //data-type="formList"<h2 class="layui-colla-title">' + n.formtype + '<span class="layui-badge">' + n.signsum + '</span></h2>
+                });
+                $("#signlist").append(listhtml);
+            }
+        });
+        // var active={
+        //     formList : function(){
+        //         addIndex = layer.open({
+        //             title : "添加角色",
+        //             type : 2,
+        //             content : "/topage/formsignlist?formtype="+ 'PR',
+        //             success : function(layero, addIndex){
+        //                 setTimeout(function(){
+        //                     layer.tips('点击此处返回角色列表', '.layui-layer-setwin .layui-layer-close', {
+        //                         tips: 3
+        //                     });
+        //                 },500);
+        //             }
+        //         });
+                //改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+            //     $(window).resize(function(){
+            //         layer.full(addIndex);
+            //     });
+            //     layer.full(addIndex);
+            // }
+        // };
+
+        //var account = $("#account").html();
+        //动态生成html绑定on使用此方式
+        // $('body').on('click','#signlist .a-list',function () {
+        //     var type = $(this).data('type');
+        //     active[type] ? active[type].call(this) : '';
+        // });
+
+        //此方式对动态生成的html绑定无效
+        // $('#signlist .layui-btn').on('click', function(){
+        //     var type = $(this).data('type');
+        //     active[type] ? active[type].call(this) : '';
+        // });
+        window.signlist = function (formtype) {
+            addIndex=layer.open({
+                title : "单据列表",
+                type : 2,
+                content : "/topage/formsignlist?formtype="+ formtype,
+                success : function(layero, addIndex){
+                    setTimeout(function(){
+                        layer.tips('点击此处返回角色列表', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500);
+                }
+            });
+            //改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+            $(window).resize(function(){
+                layer.full(addIndex);
+            });
+            layer.full(addIndex);
+        }
+
+    })
+</script>
+</body>
+</html>

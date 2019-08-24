@@ -81,12 +81,12 @@ public class MjysiteApplicationTests {
 	    user.setNickname("chengfeng");
 	    redisTemplate.opsForValue().set("objecttest",user);
     }
-    @Test
-	public void javaSub(){
-		String str = "/faceimg/**";
-		String result = str.substring(str.length()-2, str.length());
-		System.out.println(result);
-	}
+//    @Test
+//	public void javaSub(){
+//		String str = "/faceimg/**";
+//		String result = str.substring(str.length()-2, str.length());
+//		System.out.println(result);
+//	}
 //    @Test
 //	public void getShiroSession(){
 //		Session session = SecurityUtils.getSubject().getSession();
@@ -101,7 +101,7 @@ public class MjysiteApplicationTests {
 //		multiFile.transferTo(destFile );
 
 
-		File file = new File("D:/小婷.jpg");
+		File file = new File("D:/test.jpg");
 		MultipartFile mulFile = new MockMultipartFile(
 				"jielaer.jpg", //文件名
 				"jielaer.jpg", //originalName 相当于上传文件在客户机上的文件名

@@ -1,23 +1,28 @@
 package com.fashion.mjysite.util;
 
 import com.fashion.mjysite.entity.FastDFSFile;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.csource.fastdfs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.csource.common.NameValuePair;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class FastDFSClient {
     private static final Logger logger = LoggerFactory.getLogger(FastDFSClient.class);
     //使用static模块初始化配置
     static {
         try {
-            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();;
-            ClientGlobal.init(filePath);
+            ClassPathResource classPathResource = new ClassPathResource("fdfs_client.conf");
+            //创建临时文件，将fdfs_client.conf的值赋值到临时文件中，创建这个临时文件的原因是springboot打成jar后无法获取classpath下文件
+            String tempPath =System.getProperty("java.io.tmpdir") + System.currentTimeMillis()+".conf";
+            File f = new File(tempPath);
+            IOUtils.copy(classPathResource.getInputStream(),new FileOutputStream(f));
+            ClientGlobal.init(f.getAbsolutePath());
+//            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();
+//            ClientGlobal.init(filePath);
         } catch (Exception e) {
             logger.error("FastDFS Client Init Fail!",e);
         }
@@ -95,7 +100,7 @@ public class FastDFSClient {
     }
 
     public static String getTrackerUrl() throws IOException {
-        //单机构建,没配置tracker,这里先借用tracke的配置返回storage的端口
+        //单机构建
         return "http://"+getTrackerServer().getInetSocketAddress().getHostString()+":"+ClientGlobal.getG_tracker_http_port()+"/";
     }
     private static StorageClient getTrackerClient() throws IOException {

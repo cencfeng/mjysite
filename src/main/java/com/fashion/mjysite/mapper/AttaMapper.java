@@ -45,4 +45,5 @@ public interface AttaMapper {
      * @mbg.generated Wed Aug 29 11:55:59 CST 2018
      */
     int updateByPrimaryKey(Atta record);
+    List<Atta> getFileByformCode(String formcode);
 }

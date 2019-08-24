@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+
+    <![endif]-->
+    <title>PR单</title>
+    <style type="text/css">
+        input{
+            border:none #FFFFFF;
+            border-bottom:#777777 solid 1px;
+            background:transparent;
+        }
+    </style>
+</head>
+<body>
+</div>
+<div class="layui-card">
+    <div class="layui-card-header">PR单申请</div>
+    <div class="layui-card-body">
+        <div style="font-size: 18px"; align="center">深圳成丰电子有限公司</div>
+        <div style="font-family: 华文行楷; font-size: 24px" align="center">Synchian Electianice Ea.. Ltd.  No.</div>
+        <div style="font-size: 16px; text-decoration-line: underline;" align="center">PURCHASE REQUISITION SHEET</div>
+        <form id="prform" enctype="multipart/form-data" class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">单号:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="formcode" name="formcode" th:value="${formList[0].formcode}" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">Supliser:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="supliser" name="supplier" th:value="${formList[0].supplier}" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">Dept:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="dept" name="dept" th:value="${formList[0].dept}" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">Date:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="textdate" name="applydate" th:value="${#dates.format(formList[0].applydate,'yyyy-MM-dd')}" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">total:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="totalprice" name="totalprice" th:value="${formList[0].totalprice}" readonly="readonly">
+                    </div>
+                </div>
+                <!--<div class="layui-inline">-->
+                <!--<label class="layui-form-label">P/O.No.:</label>-->
+                <!--<div class="layui-input-inline">-->
+                <!--<input type="text" id="formcode" name="formcode" readonly="readonly">-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--<div class="layui-inline">-->
+                <!--<input type="button" id="createformcode" class="layui-btn layui-btn-xs" value="creat">-->
+                <!--</div>-->
+            </div>
+
+            <div>
+                <table class="layui-table" id="prtable">
+                    <thead>
+                    <tr>
+                        <th>Part No.</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="formdetail,findex: ${formList[0].formDetailList}">
+                        <td><label style="width: 15px" th:text="${findex.index+1}"></label> </td>
+                        <td><input type="text" name="description" th:value="${formdetail.description}" readonly="readonly"> </td>
+                        <td><input type="text" name="quantity" th:value="${formdetail.quantity}" readonly="readonly"> </td>
+                        <td><input type="text" name="unitprice" th:value="${formdetail.unitprice}" readonly="readonly"> </td>
+                        <td><input type="text" name="total" th:value="${formdetail.total}" readonly="readonly"> </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">附件</div>
+                <div class="layui-card-body">
+                    <table id="attatable" class="layui-table"></table>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">Delivery</div>
+                <div class="layui-card-body">
+                    <textarea class="textarea" style="width: 100%" id="delivery" name="delivery" rows="4" th:text="${formList[0].delivery}" readonly="readonly"></textarea>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">签核记录</div>
+                <div class="layui-card-body">
+                    <table id="signhistory" class="layui-table"></table>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">签核意见</div>
+                <div class="layui-card-body">
+                    <textarea class="textarea" id="signremark" name="signremark" rows="4" style="width: 100%"></textarea>
+                </div>
+            </div>
+            <div style="text-align: center; display: none" id="signoperation">
+                <input type="hidden" name="signview" th:value="${view}" id="view">
+                <input type="hidden" name="formtype" value="PR" id="formtype">
+                <button type="button" id="btnsubmit" class="layui-btn layui-btn-xs">同意</button>
+                <button type="button" id="btnback" class="layui-btn layui-btn-xs">返回</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+</div>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<!--<script type="text/javascript" src="../layui/layui.all.js"></script>-->
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<script type="text/html" id="indexno">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function (res) {
+        var layer = layui.layer,
+            form = layui.form,
+            table = layui.table;
+        var showview = $("#view").val();
+        if(showview=='signview'){
+            $("#signoperation").show();
+        }
+        var formcode = $("#formcode").val();
+        table.render({
+            elem: '#attatable'
+            , url: '/file/getFileByformCode?formcode='+ formcode
+            , cols: [
+                [
+                    {title: '序号', width:40, templet: '#indexno'}
+                    , {title: '附件', templet:function (data) {
+                        var result = '<a href="'+data.attaurl+'" target="_blank">' + data.attaname + '</a>';
+                        return result;
+                    }}
+                ]
+            ]
+            ,page:false
+        });
+        table.render({
+            elem: '#signhistory'
+            , url: '/form/getSignHistory?formcode='+ formcode
+            , cols: [
+                [
+                    {title:"签核顺序", templet: '#indexno'},
+                    {field:'account',title:'账号'},
+                    {field:'username',title:'姓名'},
+                    {field:'actionname',title:'签核步骤'},
+                    {field:'signtime', title: '签核时间'},
+                    {field:'signremark', title: '签核意见'}
+                ]
+            ]
+            ,page:false
+        });
+        $("#btnsubmit").click(function () {
+            $("#prform").attr("action", "/form/agreeSign");
+            $("#prform").ajaxSubmit(function (res) {
+                if(res.data=="success"){
+                    window.parent.location.reload();
+                    //location.reload();
+                }
+            })
+        });
+        $("#btnback").click(function () {
+            window.parent.location.reload();
+        })
+    });
+</script>
+</body>
+</html>

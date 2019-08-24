@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
         String pwd = Md5Util.encrypt(password);
         userMapper.changePwd(username, pwd);
     }
+
+    @Override
+    public String getTip() {
+        return userMapper.getTip();
+    }
 }

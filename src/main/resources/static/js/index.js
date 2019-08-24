@@ -1,6 +1,6 @@
 var $,tab,dataStr,layer;
 layui.config({
-	base : "/js/"
+	 base : "/js/"
 }).extend({
 	"bodyTab" : "bodyTab"
 })
@@ -13,7 +13,12 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 			openTabNum : "50",  //最大可打开窗口数量
 			url : "/system/getMenuByUsername" //获取菜单json地址
 		});
+
     tab.render();
+    var faceimg = $("#faceimg").html();
+    $(".userAvatar").attr("src", faceimg);
+    // getformlist();
+
 	//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
 	/*function getData(json){
 		$.getJSON(tab.tabConfig.url,function(data){
@@ -82,6 +87,10 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 		}
 		$(this).parent("li").siblings().removeClass("layui-nav-itemed");
 	})
+
+    $("#alist").on("click", function(){
+        addTab($(this));
+    })
 
 	//清除缓存
 	/*$(".clearCache").click(function(){
@@ -154,3 +163,22 @@ function donation(){
 		}]
 	})
 }
+// function getformlist() {
+//     var account = $("#account").html();
+//     $.post("/form/getFormSum", {account:account}, function (res) {
+//             var listhtml = '';
+//             if(res.result=="success"){
+//                 $("#signcard").show();
+//                 // var ss = JSON.stringify(res);
+//                 // layer.alert(res.data);
+//                 $.each(res.data,function (i,n) {
+//                     listhtml='<div class="layui-colla-item" id="alist"><a href="javascript:;" data-url= "/topage/formsignlist?formtype=' + n.formtype +'"><h2 class="layui-colla-title">'  + n.formtype + '<span class="layui-badge">' + n.signsum + '</span></h2></a></div>';
+//                 });
+//                 $("#signlist").append(listhtml);
+//                 // var listhtml=
+//                 //     '<h2 class="layui-colla-title">待签核信息<span class="layui-badge">' + res.data. + '</span></h2>' +
+//                 //     '<div class="layui-colla-content layui-show">内容区域</div>' +
+//                 //     '</div>';
+//             }
+//     });
+// }

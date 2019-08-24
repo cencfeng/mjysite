@@ -1,5 +1,7 @@
 package com.fashion.mjysite.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -74,6 +76,7 @@ public class Sign implements Serializable{
      *
      * @mbg.generated Wed Aug 29 11:55:59 CST 2018
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date signtime;
 
     /**
